@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>10 Billion Years — the life of a star, and how it became you</title>
+  <meta name="description" content="An interactive scroll journey through 10 billion years: a cold cloud collapses, a galaxy turns, a star ignites, swells, dies in a supernova — and its ashes become you. With sound." />
+  <meta name="theme-color" content="#020207" />
+  <meta property="og:title" content="10 Billion Years" />
+  <meta property="og:description" content="Scroll through the life and death of a star — from a cold hydrogen cloud to a supernova, and finally to you. An interactive 3D experience with sound." />
+  <meta property="og:type" content="website" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 2l3 11 11 3-11 3-3 11-3-11-11-3 11-3z' fill='%23ffd98a'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,600&family=Space+Grotesk:wght@300;500&display=swap" data-inline-skip />
+  <link rel="stylesheet" href="css/style.css?v=1.1.0" data-inline />
+</head>
+<body class="locked">
+
+  <!-- scroll length: the journey itself -->
+  <div class="scroll-track" aria-hidden="true"></div>
+
+  <!-- render layers -->
+  <div id="tint" aria-hidden="true"></div>
+  <canvas id="bg" aria-hidden="true"></canvas>
+  <div id="vignette" aria-hidden="true"></div>
+  <div id="flash" aria-hidden="true"></div>
+
+  <!-- narrative -->
+  <main id="chapters" aria-label="The story of a star">
+
+    <section class="chapter" data-range="0.000,0.055">
+      <p class="eyebrow">an interactive journey</p>
+      <h1>10 Billion Years</h1>
+      <p class="subtitle">the life of a star — and how its death became you</p>
+    </section>
+
+    <section class="chapter" data-range="0.052,0.128">
+      <p class="eyebrow">chapter 01 · the cloud</p>
+      <h2>It begins in darkness.</h2>
+      <p>A cloud of hydrogen and dust, older than memory, drifting between the stars. Cold. Silent. Waiting. Move your hand through it — it remembers being touched.</p>
+    </section>
+
+    <section class="chapter pos-low" data-range="0.148,0.258">
+      <p class="eyebrow">chapter 02 · the collapse</p>
+      <h2>Then — gravity whispers.</h2>
+      <p>A shockwave passes. The cloud folds inward, spinning faster as it falls, a knot tightening for a hundred thousand years.</p>
+    </section>
+
+    <section class="chapter pos-low" data-range="0.285,0.400">
+      <p class="eyebrow">chapter 03 · a galaxy</p>
+      <h2>Pull back.</h2>
+      <p>This is happening everywhere. A hundred billion suns wheel through the dark — and in one quiet spiral arm, a small cloud is about to catch fire.</p>
+    </section>
+
+    <section class="chapter pos-low" data-range="0.428,0.540">
+      <p class="eyebrow">chapter 04 · first light</p>
+      <h2>Pressure becomes fire.</h2>
+      <p>At fifteen million degrees, hydrogen fuses into helium. Light floods outward for the first time. A star is born.</p>
+    </section>
+
+    <section class="chapter pos-low" data-range="0.565,0.660">
+      <p class="eyebrow">chapter 05 · the swelling</p>
+      <h2>It burns for nine billion years.</h2>
+      <p>Then the balance breaks. The core sinks, the skin swells — a red giant, vast enough to swallow worlds.</p>
+    </section>
+
+    <section class="chapter" data-range="0.685,0.732">
+      <p class="eyebrow">chapter 06 · the last fire</p>
+      <h2>The fuel runs out.</h2>
+      <p>Deep inside, the star forges its final gifts — carbon, oxygen, iron — and the iron heart grows too heavy to hold.</p>
+    </section>
+
+    <section class="chapter" data-range="0.752,0.868">
+      <p class="eyebrow">chapter 07 · supernova</p>
+      <h2>One second.</h2>
+      <p>The core collapses at a quarter of the speed of light and rebounds — a detonation that outshines the entire galaxy.</p>
+    </section>
+
+    <section class="chapter pos-high" data-range="0.872,0.918">
+      <p class="eyebrow">chapter 08 · afterwards</p>
+      <h2>The debris drifts for eons.</h2>
+    </section>
+
+    <section class="chapter pos-low" data-range="0.905,0.952">
+      <p>Carbon for your cells. Iron for your blood. Calcium for your bones. The dust gathers, cools, and one day opens its eyes.</p>
+    </section>
+
+    <section class="chapter pos-low" data-range="0.958,1.001">
+      <p class="final-line">You are made of stars.</p>
+      <p class="final-sub">Every atom heavier than helium in your body was forged in one.</p>
+      <button id="restart" type="button">Travel again ↺</button>
+    </section>
+
+  </main>
+
+  <!-- HUD -->
+  <button id="mute" class="hud" type="button" aria-label="Toggle sound" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M11 5 6.5 9H3v6h3.5L11 19V5z" />
+      <path class="waves" d="M15 9.5a4 4 0 0 1 0 5M17.5 7a8 8 0 0 1 0 10" />
+      <path class="slash" d="M15 9l6 6M21 9l-6 6" />
+    </svg>
+  </button>
+
+  <div id="counter" class="hud" aria-live="off">
+    <span id="counter-label">years elapsed</span>
+    <span id="counter-value">0</span>
+  </div>
+
+  <nav id="rail" class="hud" aria-label="Chapters"></nav>
+
+  <div id="cue" class="hud" aria-hidden="true">
+    <span>scroll to travel</span>
+    <svg viewBox="0 0 16 24"><path d="M8 3v14M3.5 12.5 8 17l4.5-4.5" /></svg>
+  </div>
+
+  <div id="cursor-dot" aria-hidden="true"></div>
+  <div id="cursor-ring" aria-hidden="true"></div>
+
+  <!-- intro -->
+  <div id="intro" role="dialog" aria-modal="true" aria-labelledby="intro-title">
+    <svg class="intro-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2l3 11 11 3-11 3-3 11-3-11-11-3 11-3z" fill="currentColor"/></svg>
+    <p class="eyebrow">an interactive journey · best with sound</p>
+    <h1 id="intro-title">10 Billion Years</h1>
+    <p class="intro-sub">Scroll through the life of a star — a cold cloud, a collapse, a galaxy, first light, a swelling giant, a dying fire, a supernova. And what became of the ashes.</p>
+    <div class="intro-actions">
+      <button id="begin-sound" class="btn btn-primary" type="button" autofocus>Begin with sound&nbsp;&nbsp;▸</button>
+      <button id="begin-silent" class="btn btn-ghost" type="button">Enter in silence</button>
+    </div>
+    <p class="intro-hint">headphones recommended · move your cursor through the dust</p>
+  </div>
+
+  <noscript>
+    <div class="noscript-msg">
+      This journey needs JavaScript — ten billion years is hard to render in plain HTML.
+    </div>
+  </noscript>
+
+  <script src="vendor/three-r128.min.js" data-inline></script>
+  <script src="js/app.js?v=1.1.0" data-inline></script>
+</body>
+</html>

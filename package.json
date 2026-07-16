@@ -1,0 +1,13 @@
+{
+  "name": "10-billion-years",
+  "version": "1.1.0",
+  "description": "An interactive, scroll-driven, sound-designed journey through the life and death of a star — ending on the word \"you.\"",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "npx --yes serve -l 4173 .",
+    "build": "node scripts/build-standalone.mjs",
+    "vercel-build": "echo '10 Billion Years is a static site — nothing to build'"
+  },
+  "license": "MIT"
+}
