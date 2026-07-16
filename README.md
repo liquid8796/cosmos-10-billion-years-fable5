@@ -1,6 +1,6 @@
 # 10 Billion Years
 
-**Version 1.1.0** · an interactive, scroll-driven, sound-designed journey through the life and death of a star — ending on the word *you.*
+**Version 1.1.1** · an interactive, scroll-driven, sound-designed journey through the life and death of a star — ending on the word *you.*
 
 One particle field with eight destinies. As you scroll, ~42,000 GPU-morphed particles travel from a cold hydrogen cloud through gravitational collapse, a wheeling spiral galaxy, ignition, a red giant, the last fire, a supernova detonation — and finally drift back together to spell **"you."** A fully procedural WebAudio score (no audio files) evolves with every chapter and detonates with the star.
 
@@ -19,7 +19,7 @@ npm start          # serves the project at http://localhost:4173 (uses npx serve
 or serve the folder with any static server. No dependencies, no build step required to run from source.
 
 ```bash
-npm run build      # regenerates dist/10-billion-years.standalone.html
+npm run build:standalone   # regenerates dist/10-billion-years.standalone.html
 ```
 
 Everything except the (gracefully degrading) Google Fonts link works fully offline — Three.js r128 is vendored in `vendor/`.
@@ -41,7 +41,7 @@ npx vercel --prod   # production
 
 What the deployment config does:
 
-- **No build step** — a no-op `vercel-build` script guarantees the platform never runs the standalone bundler; the site deploys as pure static files from the repo root. `.vercelignore` keeps `scripts/`, `dist/`, archives and logs out of the upload.
+- **No build step, by construction** — `package.json` deliberately contains **no `build` or `vercel-build` script**, so the *Other* preset logs *"No Build Command specified. Skipping build step."* and serves the repo root as pure static files. (Any build script would make Vercel run it and then demand a `public/` output directory — the `STATIC_BUILD_NO_OUT_DIR` failure.) The standalone bundler lives under `npm run build:standalone`, a name Vercel ignores. If you ever set a Build Command override in the dashboard, clear it. `.vercelignore` keeps `scripts/`, `dist/`, archives and logs out of the upload.
 - **Cache strategy** — HTML is `max-age=0, must-revalidate` so releases propagate instantly; `/css/*`, `/js/*` and `/vendor/*` are `immutable` for one year. That is safe because app assets carry version-stamped URLs (`?v=1.1.0`) and the vendored Three.js is revision-named (`three-r128.min.js`) — every release changes the URLs, never the cached bytes.
 - **Security headers** — a strict Content-Security-Policy (self-hosted scripts only, Google Fonts allow-listed, no objects, `frame-ancestors *` so showcases may embed it), `nosniff`, referrer and permissions policies.
 - **Clean URLs + SPA fallback** — `cleanUrls` drops `.html`, and unknown paths rewrite to the experience instead of a 404.
@@ -97,7 +97,7 @@ Audio starts only after an explicit user gesture (the intro's *Begin with sound*
 ├── .vercelignore                  # trims the deployment upload
 ├── CHANGELOG.md
 ├── LICENSE                        # MIT
-└── package.json                   # version source of truth · no-op vercel-build
+└── package.json                   # version source of truth · deliberately no `build` script
 ```
 
 **Engine (`js/app.js`) in one paragraph:** eight deterministic Float32Array position sets (one per stage, seeded RNG) are generated at boot; the shader interpolates between the current pair (`position` ↔ `aPosB`) with a CPU-eased morph factor, so buffers are re-uploaded **only when the timeline crosses a keyframe**. The vertex shader adds per-stage differential-vs-rigid rotation (`diff` controls how fast inner material orbits relative to the whole — full vortex for the collapse, near-rigid for the galaxy so the arms never wind into a smear), radial pulse (the dying star's flicker), trig-based turbulence, and pointer repulsion + tangential vortex in world space. Segment 5 uses a custom ease that trembles slowly and then detonates; crossing the threshold fires the boom (audio one-shot, white flash overlay, brightness boost, decaying camera shake). The word *you.* is rasterized from a hidden canvas at boot and sampled into particle targets.
@@ -140,7 +140,7 @@ Shipped after a headless-Chromium pass (SwiftShader WebGL): zero console errors 
 
 ## Changelog
 
-See [CHANGELOG.md](CHANGELOG.md). Current release: **1.1.0** — Vercel deployment support.
+See [CHANGELOG.md](CHANGELOG.md). Current release: **1.1.1** — Vercel build fix.
 
 ## License
 

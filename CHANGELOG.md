@@ -3,6 +3,15 @@
 All notable changes to this project are documented here.
 Format: [Keep a Changelog](https://keepachangelog.com) · Versioning: [SemVer](https://semver.org)
 
+## [1.1.1] — 2026-07-16
+
+### Fixed
+- Vercel deployment failed with `STATIC_BUILD_NO_OUT_DIR` (*No Output Directory named "public" found after the Build completed*): the presence of **any** `build`/`vercel-build` script makes the *Other* preset run a build and then require a `public/` output directory. The no-op `vercel-build` from 1.1.0 is removed and the standalone bundler is renamed `build` → `build:standalone`, so Vercel detects no build command, skips the build step, and serves the repo root statically.
+
+### Changed
+- `vercel.json`: the `/(css|js)/(.*)` cache rule is split into separate `/css/(.*)` and `/js/(.*)` rules — plain route sources with no alternation syntax.
+- Asset stamps bumped to `?v=1.1.1`.
+
 ## [1.1.0] — 2026-07-16
 
 ### Added
